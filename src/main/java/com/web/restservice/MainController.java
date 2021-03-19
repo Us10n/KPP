@@ -24,8 +24,4 @@ public class MainController {
         return new Vector(x1, y1, x2, y2);
     }
     private static Logger logger = LogManager.getLogger(MainController.class);
-    public static int calculate(int i1,int i2){
-        return i1+i2;
-    }
-
 }

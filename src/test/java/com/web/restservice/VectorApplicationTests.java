@@ -8,15 +8,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 class VectorApplicationTests {
 
     @Test
-    void IVectorTest() {
-        Vector v1 = new Vector(1, 2, 3, 4);
-        Vector v2 = new Vector(1, 1, 3, 4);
-
-        Assert.assertEquals(new Vector(1, 2, 3, 4),new Vector(1, 2, 3, 4));
+    void VectorTest() {
+        Assert.assertEquals(new Vector(1, 1, 3, 4), new Vector(1, 1, 3, 4));
+        Assert.assertNotEquals(new Vector(1, 1, 3, 4), new Vector(1, 1, 1, 1));
     }
     @Test
-    void DVectorTest(){
-        Assert.assertEquals(MainController.calculate(1, 1), 2);
+    void IntTest(){
+
     }
 
 
