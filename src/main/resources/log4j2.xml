@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration>
+    <Properties>
+        <Property name="layout">%d [%t] %-5level %logger{36} - %m%n</Property>
+        <Property name="console_layout">%d{[HH:mm:ss]} %m%n</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console">
+            <PatternLayout pattern="${console_layout}"/>
+        </Console>
+        <RollingFile name="MyFile" fileName="D:\logs\log-gen-0.log" filePattern="logs/log-gen-%i.log">
+            <PatternLayout pattern="${layout}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="20 KB" />
+            </Policies>
+            <DefaultRolloverStrategy max="4"/>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <!-- ALL < TRACE < DEBUG < INFO < WARN < ERROR < FATAL < OFF -->
+        <Logger name="com.web.restservice" level="error">
+            <AppenderRef ref="MyFile" />
+        </Logger>
+        <Logger name="com.web.restservice" level="info">
+            <AppenderRef ref="MyFile" />
+        </Logger>
+        <Root>
+            <AppenderRef ref="MyFile" />
+        </Root>
+    </Loggers>
+</Configuration>
