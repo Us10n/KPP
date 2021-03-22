@@ -16,7 +16,7 @@ public class Vector {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Vector vector = (Vector) o;
-        return Objects.equals(x1, vector.x1) && Objects.equals(x2, vector.x2) && Objects.equals(y1, vector.y1) && Objects.equals(y2, vector.y2) && Objects.equals(Norma, vector.Norma) && Objects.equals(projection_x, vector.projection_x) && Objects.equals(projection_y, vector.projection_y);
+        return Objects.equals(Norma, vector.Norma) && Objects.equals(projection_x, vector.projection_x) && Objects.equals(projection_y, vector.projection_y);
     }
 
     Vector(Integer x1, Integer y1, Integer x2, Integer y2) {
