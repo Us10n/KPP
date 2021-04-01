@@ -19,8 +19,8 @@ public class MainController {
                             @RequestParam(value = "y1", defaultValue = "0") Integer y1,
                             @RequestParam(value = "x2", defaultValue = "0") Integer x2,
                             @RequestParam(value = "y2", defaultValue = "0") Integer y2) {
-        Vector vector;
-        vector = new Vector(x1, y1, x2, y2);
+
+        Vector vector= new Vector(x1, y1, x2, y2);
 
 
         if (cache.IsContains(vector)) {
