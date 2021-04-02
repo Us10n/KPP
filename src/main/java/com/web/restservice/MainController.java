@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MainController {
     private static final Logger logger = LogManager.getLogger(MainController.class);
+
     @Autowired
-    private static Cache cache=new Cache();
+    private Cache cache;
 
     @GetMapping("/")
     public Vector GetParams(@RequestParam(value = "x1", defaultValue = "0") Integer x1,

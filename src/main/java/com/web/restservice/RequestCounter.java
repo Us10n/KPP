@@ -13,4 +13,7 @@ public enum RequestCounter {
         ++counter;
         logger.info(counter);
     }
+    public synchronized Integer getCounter(){
+        return counter;
+    }
 }

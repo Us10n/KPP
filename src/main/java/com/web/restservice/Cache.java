@@ -2,23 +2,30 @@ package com.web.restservice;
 
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 @Component
 public class Cache {
     private final BlockingQueue<Vector> blockingQueue = new LinkedBlockingQueue<>();
+    private final HashMap<Integer,Vector> hashMap=new HashMap<>();
 
     public boolean IsContains(Vector vector) {
         return blockingQueue.contains(vector);
     }
 
     public boolean add(Vector vector) {
-        if (!blockingQueue.contains(vector)) {
-            return blockingQueue.add(vector);
-        } else {
-            return false;
+        return blockingQueue.add(vector);
+    }
+
+    public synchronized void  put(Vector vector){
+        if(!hashMap.containsValue(vector)){
+            hashMap.put(RequestCounter.INSTANCE.getCounter(),vector);
         }
+    }
+    public synchronized boolean IsContains_map(Vector vector){
+        return hashMap.containsValue(vector);
     }
 
 }
