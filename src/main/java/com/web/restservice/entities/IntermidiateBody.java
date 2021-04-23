@@ -1,0 +1,31 @@
+package com.web.restservice.entities;
+
+public class IntermidiateBody {
+    private String x1;
+    private String x2;
+    private String y1;
+    private String y2;
+
+    public IntermidiateBody(String x1, String x2, String y1, String y2) {
+        this.x1 = x1;
+        this.x2 = x2;
+        this.y1 = y1;
+        this.y2 = y2;
+    }
+
+    public String getX1() {
+        return x1;
+    }
+
+    public String getX2() {
+        return x2;
+    }
+
+    public String getY1() {
+        return y1;
+    }
+
+    public String getY2() {
+        return y2;
+    }
+}

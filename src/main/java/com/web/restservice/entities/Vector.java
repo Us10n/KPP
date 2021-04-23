@@ -49,5 +49,19 @@ public class Vector {
         this.Norma = Math.sqrt(Math.pow(this.projection_x, 2) + Math.pow(projection_y, 2));
     }
 
+    public Integer getX1() {
+        return x1;
+    }
 
+    public Integer getX2() {
+        return x2;
+    }
+
+    public Integer getY1() {
+        return y1;
+    }
+
+    public Integer getY2() {
+        return y2;
+    }
 }
