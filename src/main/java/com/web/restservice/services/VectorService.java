@@ -51,9 +51,6 @@ public class VectorService {
 
     public Vector dbVectorFind(VectorBody vectorBody) throws Exception{
         Vector vector=vectorRepo.findVectorByX1AndX2AndY1AndY2(vectorBody.getX1(), vectorBody.getX2(), vectorBody.getY1(), vectorBody.getY2());
-        if(vector==null){
-            throw new Exception();
-        }
         return vector;
     }
 
