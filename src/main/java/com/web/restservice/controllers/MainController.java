@@ -38,11 +38,6 @@ public class MainController {
         }
     }
 
-    @GetMapping("/counter")
-    public Integer outCounter() {
-        return RequestCounter.INSTANCE.getCounter();
-    }
-
     @PostMapping(value = "/")
     public ResponseEntity<?> bulkParams(@RequestBody List<IntermidiateBody> bodyList) {
         if(bodyList.isEmpty()){
