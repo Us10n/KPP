@@ -1,10 +1,10 @@
 package com.web.restservice.entities;
 
 public class IntermidiateBody {
-    private String x1;
-    private String x2;
-    private String y1;
-    private String y2;
+    private String x1="0";
+    private String x2="0";
+    private String y1="0";
+    private String y2="0";
 
     public IntermidiateBody(String x1, String x2, String y1, String y2) {
         this.x1 = x1;

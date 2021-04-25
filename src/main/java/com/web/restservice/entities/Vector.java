@@ -1,8 +1,16 @@
 package com.web.restservice.entities;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Objects;
-
+@Entity
 public class Vector {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private Integer x1;
     private Integer x2;
     private Integer y1;
@@ -16,7 +24,34 @@ public class Vector {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Vector vector = (Vector) o;
-        return Objects.equals(Norma, vector.Norma) && Objects.equals(projection_x, vector.projection_x) && Objects.equals(projection_y, vector.projection_y);
+        return Objects.equals(x1, vector.x1) && Objects.equals(x2, vector.x2) && Objects.equals(y1, vector.y1) && Objects.equals(y2, vector.y2) && Objects.equals(Norma, vector.Norma) && Objects.equals(projection_x, vector.projection_x) && Objects.equals(projection_y, vector.projection_y);
+    }
+
+    public Vector() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setX1(Integer x1) {
+        this.x1 = x1;
+    }
+
+    public void setX2(Integer x2) {
+        this.x2 = x2;
+    }
+
+    public void setY1(Integer y1) {
+        this.y1 = y1;
+    }
+
+    public void setY2(Integer y2) {
+        this.y2 = y2;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Double getNorma() {
