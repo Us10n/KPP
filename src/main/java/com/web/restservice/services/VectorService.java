@@ -9,10 +9,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.OptionalDouble;
+import java.util.concurrent.Semaphore;
+
 @Service
 public class VectorService {
     @Autowired
     VectorRepo vectorRepo;
+
+    Semaphore semaphore = new Semaphore(1);
 
     public Double calcAverageX1(List<Vector> vectorList) {
         return vectorList.stream().
@@ -49,9 +53,34 @@ public class VectorService {
                 mapToInt(Vector::getProjection_y).average().getAsDouble();
     }
 
-    public Vector dbVectorFind(VectorBody vectorBody) throws Exception{
-        Vector vector=vectorRepo.findVectorByX1AndX2AndY1AndY2(vectorBody.getX1(), vectorBody.getX2(), vectorBody.getY1(), vectorBody.getY2());
+    public Vector dbVectorFind(VectorBody vectorBody){
+        Vector vector;
+        try {
+            semaphore.acquire();
+            vector=vectorRepo.findVectorByX1AndX2AndY1AndY2(vectorBody.getX1(), vectorBody.getX2(), vectorBody.getY1(), vectorBody.getY2());
+        } catch (InterruptedException e) {
+            System.out.println("Semaphore error corrupted");
+            return null;
+        }
+        finally {
+            semaphore.release();
+        }
         return vector;
+    }
+
+    public Vector dbVectorSave(Vector vector){
+        Vector vtmp;
+        try {
+            semaphore.acquire();
+            vtmp=vectorRepo.save(vector);
+        } catch (InterruptedException e) {
+            System.out.println("Semaphore error corrupted");
+            return null;
+        }
+        finally {
+            semaphore.release();
+        }
+        return vtmp;
     }
 
 
