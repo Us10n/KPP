@@ -1,11 +1,11 @@
 package com.web.restservice.controllers;
 
-import com.web.restservice.entities.*;
-import com.web.restservice.repository.VectorRepo;
+import com.web.restservice.entities.AverageValues;
+import com.web.restservice.entities.IntermediateBody;
+import com.web.restservice.entities.Vector;
+import com.web.restservice.entities.VectorBody;
 import com.web.restservice.services.RequestCounter;
 import com.web.restservice.services.VectorService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,27 +13,20 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @RestController
 public class MainController {
-    private static final Logger logger = LogManager.getLogger(MainController.class);
 
-    @Autowired
-    private Cache cache;
 
     @Autowired
     private VectorService vectorService;
 
     @PostMapping(value = "/")
-    public ResponseEntity<?> bulkParams(@RequestBody List<IntermidiateBody> bodyList) {
-        if (bodyList.isEmpty()) {
-            return new ResponseEntity<>("400 error", HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<?> bulkParams(@RequestBody List<IntermediateBody> bodyList) {
         //invalid input check
         List<VectorBody> vectorBodyList = new LinkedList<>();
-        for (IntermidiateBody tmp : bodyList) {
+        for (IntermediateBody tmp : bodyList) {
             try {
                 vectorBodyList.add(new VectorBody(Integer.parseInt(tmp.getX1().trim()), Integer.parseInt(tmp.getX2().trim()),
                         Integer.parseInt(tmp.getY1().trim()), Integer.parseInt(tmp.getY2().trim())));
@@ -43,33 +36,16 @@ public class MainController {
 
         }
         //vector save
-        vectorBodyList.forEach((vectorBody) -> {
-            Vector vector;
-            if (cache.isContains(vectorBody)) {
-                logger.info("Vector exists in cache");
-                vector = cache.get(vectorBody);
-            } else {
-                vector = vectorService.dbVectorFind(vectorBody);
-                if (vector != null) {
-                    logger.info("Vector exists in db");
-                } else {
-                    logger.info("Vector saved in db");
-                    vector = new Vector(vectorBody.getX1(), vectorBody.getY1(), vectorBody.getX2(), vectorBody.getY2());
-                    vectorService.dbVectorSave(vector);
-                }
-                vector = new Vector(vectorBody.getX1(), vectorBody.getY1(), vectorBody.getX2(), vectorBody.getY2());
-                logger.info("Vector saved cache");
-                cache.put(vectorBody, vector);
-            }
-        });
+        vectorBodyList=vectorService.VectorSaveList(vectorBodyList);
 
-        List<Vector> vectorList = vectorBodyList.stream()
-                .map((body) -> new Vector(body.getX1(), body.getY1(), body.getX2(), body.getY2()))
-                .collect(Collectors.toList());
-        AverageValues values = new AverageValues(vectorService.calcAverageX1(vectorList), vectorService.calcAverageX2(vectorList),
-                vectorService.calcAverageY1(vectorList), vectorService.calcAverageY2(vectorList),
-                vectorService.calcAverageNorma(vectorList), vectorService.calcAverageProjectionX(vectorList),
-                vectorService.calcAverageProjectionY(vectorList));
+        List<Vector> vectorList = vectorService.convertToVectorList(vectorBodyList);
+
+        AverageValues values = new AverageValues();
+        try {
+            values.countArrangeValues(vectorList);
+        }catch (Exception e){
+            return new ResponseEntity<>("500 error",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
         RequestCounter.INSTANCE.IncCounter();
         return new ResponseEntity<>(values, HttpStatus.OK);
@@ -87,24 +63,8 @@ public class MainController {
         } catch (Exception e) {
             return new ResponseEntity<>("400 error", HttpStatus.BAD_REQUEST);
         }
-        Vector vector;
 
-        if (cache.isContains(vectorBody)) {
-            logger.info("Vector exists in cache");
-            vector = cache.get(vectorBody);
-        } else {
-            vector = vectorService.dbVectorFind(vectorBody);
-            if (vector != null) {
-                logger.info("Vector exists in db");
-            } else {
-                logger.info("Vector saved in db and cache");
-                vector = new Vector(vectorBody.getX1(), vectorBody.getY1(), vectorBody.getX2(), vectorBody.getY2());
-                vectorService.dbVectorSave(vector);
-            }
-            vector = new Vector(vectorBody.getX1(), vectorBody.getY1(), vectorBody.getX2(), vectorBody.getY2());
-            logger.info("Vector saved cache");
-            cache.put(vectorBody, vector);
-        }
+        Vector vector= vectorService.VectorSaveClass(vectorBody);
         RequestCounter.INSTANCE.IncCounter();
         return new ResponseEntity<>(vector, HttpStatus.OK);
     }
