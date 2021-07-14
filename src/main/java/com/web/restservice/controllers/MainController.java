@@ -23,28 +23,17 @@ public class MainController {
     private VectorService vectorService;
 
     @PostMapping(value = "/")
-    public ResponseEntity<?> bulkParams(@RequestBody List<IntermediateBody> bodyList) {
-        //invalid input check
-        List<VectorBody> vectorBodyList = new LinkedList<>();
-        for (IntermediateBody tmp : bodyList) {
-            try {
-                vectorBodyList.add(new VectorBody(Integer.parseInt(tmp.getX1().trim()), Integer.parseInt(tmp.getX2().trim()),
-                        Integer.parseInt(tmp.getY1().trim()), Integer.parseInt(tmp.getY2().trim())));
-            } catch (Exception e) {
-                return new ResponseEntity<>("400 error", HttpStatus.BAD_REQUEST);
-            }
-
-        }
+    public ResponseEntity<?> bulkParams(@RequestBody List<VectorBody> bodyList) {
         //vector save
-        vectorBodyList=vectorService.VectorSaveList(vectorBodyList);
+        bodyList = vectorService.VectorSaveList(bodyList);
 
-        List<Vector> vectorList = vectorService.convertToVectorList(vectorBodyList);
+        List<Vector> vectorList = vectorService.convertToVectorList(bodyList);
 
         AverageValues values = new AverageValues();
         try {
             values.countArrangeValues(vectorList);
-        }catch (Exception e){
-            return new ResponseEntity<>("500 error",HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            return new ResponseEntity<>("500 error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         RequestCounter.INSTANCE.IncCounter();
